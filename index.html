@@ -863,7 +863,7 @@ function select(d){
       <h2>No.${d.no} ${d.area}</h2>
       <dl class="kv">
         <dt>記録日</dt><dd>${d.d}</dd>
-        <dt>管轄</dt><dd>${d.kanri} → ${d.dest}　<a href="https://webgis.alandis.jp/fukui18/webgis/index.php/autologin_jswebgis?u=guest01&ap=jsWebGIS&m=2" target="_blank" rel="noopener">台帳(ふくいマップ)</a></dd>
+        <dt>管轄</dt><dd>${d.kanri} → ${d.dest}　<a id="ledgerLink" href="https://webgis.alandis.jp/fukui18/webgis/index.php/autologin_jswebgis?u=guest01&ap=jsWebGIS&m=2" target="_blank" rel="noopener" title="押すと緯度経度をコピー。ふくいマップの検索窓か座標移動に貼ってください">台帳を開く(座標コピー)</a></dd>
         <dt>フォーム区分</dt><dd>${d.form}</dd>
         <dt>損傷</dt><dd>${"★".repeat(d.dmg)}${"☆".repeat(5-d.dmg)}(作成者の目視評価)</dd>
         <dt>優先度</dt><dd>${d.p}(損傷${d.dmg}×人流${d.flow}${d.sf>1?"×学校"+d.sf:""})${d.sw?"　🏫"+d.sw:""}</dd>
@@ -873,6 +873,8 @@ function select(d){
       ${action}
     </div>`;
   document.getElementById("backLink").onclick = (e)=>{e.preventDefault(); selected=null; renderRank(filtered());};
+  const ll = document.getElementById("ledgerLink");
+  if(ll) ll.addEventListener("click", ()=>{ try{ navigator.clipboard.writeText(d.lat+","+d.lng); ll.textContent="台帳を開く("+d.lat+","+d.lng+" コピー済)"; }catch(e){} });
   const cb = document.getElementById("copyBtn");
   if(cb) cb.onclick = ()=>{
     navigator.clipboard.writeText(reportText(d)).then(()=>{ cb.textContent="コピーしました ✓"; setTimeout(()=>cb.textContent="通報文をコピー", 1800); });
