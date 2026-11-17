@@ -724,6 +724,7 @@ td.num{font-variant-numeric:tabular-nums; text-align:right;}
 footer{padding:16px 20px 28px; color:var(--ink3); font-size:11.5px; border-top:1px solid var(--line); margin-top:18px;}
 footer p{margin-bottom:4px;}
 .leaflet-container{font:inherit;}
+.tile-dark{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.92) saturate(.25);}
 .leaflet-tooltip.dk{background:var(--panel); border:1px solid var(--line); color:var(--ink); border-radius:6px; font-size:12px;}
 .leaflet-tooltip.dk::before{display:none;}
 @media (max-width:760px){
@@ -766,7 +767,7 @@ footer p{margin-bottom:4px;}
   <p>損傷レベルは作成者の目視評価であり、国の定期点検の診断区分(Ⅰ〜Ⅳ)とは別物です。参考であり、診断ではありません。優先度=損傷(1〜5)×人流(町丁目人口密度と国土交通省「全国の人流オープンデータ」による重み)。</p>
   <p>民地とみられる箇所・管理者不明の17件は、このデモでは表示していません。現場写真366枚は、写り込み(顔・車両ナンバー等)のぼかし処理を行う前のため本デモには載せていません。</p>
   <p>通報の受け皿: <a href="https://shinsei.e-fukui.lg.jp/SksJuminWeb/EntryForm?id=6zl6aoBB" target="_blank" rel="noopener">福井県電子申請サービス「道路損傷箇所通報」</a>(フォーム項目は2026-11-16確認)。県道は福井土木事務所管理課、国道8号は道路緊急ダイヤル#9910。</p>
-  <p>出典: 歩歩歩プロジェクト実測データ(本リポジトリ data/)/地図: © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>/人流: 国土交通省 全国の人流オープンデータ。</p>
+  <p>出典: 歩歩歩プロジェクト実測データ(本リポジトリ data/)/地図: <a href="https://maps.gsi.go.jp/development/ichiran.html">国土地理院タイル</a>(淡色地図)を加工して作成/人流: 国土交通省 全国の人流オープンデータ。</p>
   <p>合同会社HOHOHO — MIT License。</p>
 </footer>
 
@@ -781,7 +782,7 @@ let fDest = null, fDmg = 0, fCat = "", selected = null;
 
 // ---- map ----
 const map = L.map("map", {zoomControl:true, attributionControl:false}).setView([36.075, 136.22], 13);
-L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {maxZoom:19}).addTo(map);
+L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png", {maxZoom:18, className:"tile-dark"}).addTo(map);
 const layer = L.layerGroup().addTo(map);
 const markers = {};
 
