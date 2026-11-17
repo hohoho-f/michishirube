@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ほほほレポート — あるいて、みつけて、おしえる</title>
+<style>
+:root{
+  --bg:#fffdf6; --card:#ffffff; --line:#e8e2d0; --ink:#2b2a26; --ink2:#7a766a;
+  --accent:#f5b800; --accent-dk:#1a1405; --ok:#3a8f4f; --danger:#c94f3d;
+}
+*{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{background:var(--bg); color:var(--ink); font-family:"Hiragino Maru Gothic ProN","BIZ UDGothic","Yu Gothic",system-ui,sans-serif; font-size:18px; line-height:1.6;}
+.wrap{max-width:480px; margin:0 auto; min-height:100%; display:flex; flex-direction:column; padding:14px 14px 24px;}
+header{display:flex; align-items:center; gap:8px; padding:4px 2px 12px;}
+header .logo{font-size:22px; font-weight:800; letter-spacing:.04em;}
+header .logo b{color:var(--accent);}
+header .count{margin-left:auto; font-size:14px; color:var(--ink2);}
+.dots{display:flex; gap:6px; justify-content:center; margin:2px 0 14px;}
+.dots i{width:10px; height:10px; border-radius:50%; background:var(--line);}
+.dots i.on{background:var(--accent);}
+.q{font-size:22px; font-weight:800; text-align:center; margin-bottom:4px;}
+.sub{font-size:14px; color:var(--ink2); text-align:center; margin-bottom:16px;}
+.screen{display:none; flex:1; flex-direction:column;}
+.screen.on{display:flex;}
+.bigbtns{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.bigbtns.one{grid-template-columns:1fr;}
+.bb{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:18px 10px; text-align:center; font-size:17px; font-weight:700; cursor:pointer; min-height:96px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--ink);}
+.bb .em{font-size:34px; line-height:1;}
+.bb.sel{border-color:var(--accent); background:#fff7dc;}
+.bb:active{transform:scale(.97);}
+.primary{display:block; width:100%; background:var(--accent); color:var(--accent-dk); border:none; border-radius:16px; padding:18px; font-size:20px; font-weight:800; cursor:pointer; margin-top:16px; font-family:inherit;}
+.primary:disabled{opacity:.35;}
+.ghost{display:block; width:100%; background:none; border:none; color:var(--ink2); font-size:15px; padding:12px; cursor:pointer; font-family:inherit;}
+.photo-slot{background:var(--card); border:2px dashed var(--line); border-radius:16px; min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; overflow:hidden; position:relative; margin-bottom:12px;}
+.photo-slot img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+.photo-slot .cap{font-size:17px; font-weight:700;}
+.photo-slot .em{font-size:40px;}
+.photo-slot.done{border-style:solid; border-color:var(--ok);}
+.photo-slot .badge{position:absolute; top:8px; right:10px; background:var(--ok); color:#fff; border-radius:999px; padding:2px 12px; font-size:14px; font-weight:800; z-index:2;}
+input[type=file]{display:none;}
+.gps{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:20px; text-align:center; margin-bottom:8px;}
+.gps .st{font-size:19px; font-weight:800;}
+.gps .co{font-size:13px; color:var(--ink2); margin-top:4px; font-variant-numeric:tabular-nums;}
+.done-face{font-size:64px; text-align:center; margin:18px 0 6px;}
+.done-msg{font-size:22px; font-weight:800; text-align:center;}
+.done-sub{text-align:center; color:var(--ink2); font-size:15px; margin-top:6px;}
+.spacer{flex:1;}
+.settings{font-size:12px; color:var(--ink2); text-align:center; margin-top:18px;}
+.settings a{color:var(--ink2);}
+dialog{border:none; border-radius:16px; padding:18px; width:min(92vw,420px); font-family:inherit;}
+dialog h3{font-size:16px; margin-bottom:10px;}
+dialog label{font-size:13px; color:var(--ink2); display:block; margin-top:10px;}
+dialog input{width:100%; border:1px solid var(--line); border-radius:8px; padding:8px; font-size:14px; font-family:inherit;}
+dialog .primary{margin-top:14px; padding:12px;}
+.toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:8px 18px; font-size:14px; opacity:0; transition:.3s; pointer-events:none; z-index:9;}
+.toast.show{opacity:1;}
+/* ---- スタンプ帳 ---- */
+.progress-card{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:14px; cursor:pointer;}
+.progress-card .pc-top{display:flex; align-items:center; gap:8px; font-weight:800; font-size:16px;}
+.progress-card .pc-top .em{font-size:24px;}
+.progress-card .bar{height:10px; background:var(--line); border-radius:999px; margin-top:10px; overflow:hidden;}
+.progress-card .bar i{display:block; height:100%; background:var(--accent); border-radius:999px;}
+.progress-card .pc-sub{font-size:13px; color:var(--ink2); margin-top:6px;}
+.rally{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:18px;}
+.stamp{text-align:center;}
+.stamp .cir{width:56px; height:56px; margin:0 auto; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--line); filter:grayscale(1); opacity:.55; border:2px solid var(--line);}
+.stamp.got .cir{background:#fff3c9; filter:none; opacity:1; border-color:var(--accent);}
+.stamp .nm{font-size:10.5px; color:var(--ink2); margin-top:4px; line-height:1.3;}
+.stamp.got .nm{color:var(--ink); font-weight:700;}
+.badges{display:flex; flex-direction:column; gap:10px;}
+.badge-row{display:flex; gap:12px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
+.badge-row .cir{width:44px; height:44px; flex:none; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; background:var(--line); filter:grayscale(1); opacity:.5;}
+.badge-row.got .cir{background:#fff3c9; filter:none; opacity:1; border:2px solid var(--accent);}
+.badge-row .bn{font-size:15px; font-weight:800;}
+.badge-row .bc{font-size:12px; color:var(--ink2);}
+.badge-row.got .new{margin-left:auto; background:var(--danger); color:#fff; font-size:11px; border-radius:999px; padding:2px 8px; font-weight:800;}
+.earn{background:#fff7dc; border:2px solid var(--accent); border-radius:16px; padding:12px 14px; margin-top:14px; text-align:center; font-weight:800; font-size:17px;}
+.h2{font-size:16px; font-weight:800; margin:6px 0 10px; color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo"><b>歩歩歩</b>レポート</div>
+  <div class="count" id="count"></div>
+</header>
+
+<!-- HOME -->
+<div class="screen on" id="s-home">
+  <div class="q">あるいて、みつけたら<br>おしえてください</div>
+  <div class="sub">こわれた道・あぶない場所をきろくします</div>
+  <div class="progress-card" id="progressCard" onclick="openStamps()"></div>
+  <div class="spacer"></div>
+  <button class="primary" style="min-height:120px; font-size:26px;" onclick="start()">📷 きろくする</button>
+  <button class="ghost" onclick="openStamps()">🎖️ スタンプちょうを みる</button>
+  <div class="spacer"></div>
+  <div class="settings"><a href="#" onclick="document.getElementById('dlg').showModal();return false;">設定(スタッフ用)</a></div>
+</div>
+
+<!-- STEP1 PHOTO -->
+<div class="screen" id="s-photo">
+  <div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+  <div class="q">しゃしんを とる</div>
+  <div class="sub">まず ちかくで 1まい。つぎに すこし はなれて 1まい</div>
+  <label class="photo-slot" id="slot1">
+    <span class="em">📷</span><span class="cap">① ちかくで 1まい</span>
+    <input type="file" accept="image/*" capture="environment" onchange="gotPhoto(this,1)">
+  </label>
+  <label class="photo-slot" id="slot2">
+    <span class="em">🏞️</span><span class="cap">② はなれて 1まい</span>
+    <input type="file" accept="image/*" capture="environment" onchange="gotPhoto(this,2)">
+  </label>
+  <button class="primary" id="photoNext" disabled onclick="go('s-what')">つぎへ</button>
+  <button class="ghost" onclick="go('s-home')">やめる</button>
+</div>
+
+<!-- STEP2 WHAT -->
+<div class="screen" id="s-what">
+  <div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+  <div class="q">なにが こわれていますか?</div>
+  <div class="sub">ちかいものを 1つ えらんでください</div>
+  <div class="bigbtns" id="whatBtns"></div>
+  <button class="primary" id="whatNext" disabled onclick="go('s-how')">つぎへ</button>
+  <button class="ghost" onclick="go('s-photo')">もどる</button>
+</div>
+
+<!-- STEP3 HOW -->
+<div class="screen" id="s-how">
+  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+  <div class="q">どれくらい あぶないと<br>おもいますか?</div>
+  <div class="sub">あなたの かんじたままで だいじょうぶです</div>
+  <div class="bigbtns one" id="howBtns"></div>
+  <button class="primary" id="howNext" disabled onclick="go('s-send')">つぎへ</button>
+  <button class="ghost" onclick="go('s-what')">もどる</button>
+</div>
+
+<!-- STEP4 SEND -->
+<div class="screen" id="s-send">
+  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+  <div class="q">ばしょを しらべています</div>
+  <div class="gps" id="gpsBox">
+    <div class="st" id="gpsSt">📍 さがしています…</div>
+    <div class="co" id="gpsCo"></div>
+  </div>
+  <div class="sub" id="sendSub">ばしょが わかったら「おくる」を おしてください</div>
+  <button class="primary" id="sendBtn" disabled onclick="send()">おくる</button>
+  <button class="ghost" onclick="go('s-how')">もどる</button>
+</div>
+
+<!-- DONE -->
+<div class="screen" id="s-done">
+  <div class="spacer"></div>
+  <div class="done-face">🎉</div>
+  <div class="done-msg">ありがとうございました!</div>
+  <div class="done-sub" id="doneSub"></div>
+  <div class="spacer"></div>
+  <div id="earnBox"></div>
+  <button class="primary" onclick="start()">📷 つづけて きろくする</button>
+  <button class="ghost" onclick="go('s-home')">おわる</button>
+</div>
+
+<!-- STAMPS -->
+<div class="screen" id="s-stamps">
+  <div class="q">スタンプちょう</div>
+  <div class="sub" id="stampSub"></div>
+  <div class="h2">🗾 ふくいの まちを あるこう(きろく10けんごと)</div>
+  <div class="rally" id="rallyBox"></div>
+  <div class="h2">🎖️ バッジ</div>
+  <div class="badges" id="badgeBox"></div>
+  <button class="primary" onclick="go('s-home')">とじる</button>
+</div>
+</div>
+
+<dialog id="dlg">
+  <h3>スタッフ用設定</h3>
+  <label>送信先URL(Google Apps Script のWebアプリURL。空なら端末に保存のみ)</label>
+  <input id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec">
+  <label>記録者ラベル(事業所名・イニシャル等。本名は入れない)</label>
+  <input id="cfgName" placeholder="例: HOHOHO-A">
+  <button class="primary" onclick="saveCfg()">保存</button>
+  <button class="ghost" onclick="document.getElementById('dlg').close()">閉じる</button>
+  <p style="font-size:12px;color:var(--ink2);margin-top:10px;">未送信: <span id="pendCount">0</span>件 <button class="ghost" style="display:inline;width:auto;padding:4px 8px;" onclick="flush()">いま送る</button></p>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- 選択肢(当事者向け大分類 → 幹事側でフォーム9区分へ変換) ----
+const WHAT = [
+  ["🕳️","道路の あな・ひび","路面"],
+  ["🚧","ガードレール・さく","防護柵"],
+  ["〰️","みぞ・みぞの ふた","側溝"],
+  ["🟨","黄色い 点字ブロック","点字ブロック"],
+  ["💡","電気・ライト","照明"],
+  ["❓","そのほか","その他"],
+];
+const HOW = [
+  ["🔴","すぐ あぶない(けがを しそう)",5],
+  ["🟡","そのうち あぶない",3],
+  ["⚪","よく わからない",2],
+];
+
+let rec = null;
+const S = (k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+const G = (k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}};
+
+// ---- screens ----
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  document.getElementById(id).classList.add("on");
+  if(id==="s-send") getGPS();
+}
+function start(){
+  rec = {ts:new Date().toISOString(), p1:null, p2:null, what:null, how:null, lat:null, lng:null, acc:null,
+         name: G("cfg",{}).name||""};
+  ["slot1","slot2"].forEach(i=>{const s=document.getElementById(i); s.classList.remove("done"); s.querySelectorAll("img,.badge").forEach(x=>x.remove());});
+  document.getElementById("photoNext").disabled = true;
+  document.querySelectorAll("#whatBtns .bb, #howBtns .bb").forEach(b=>b.classList.remove("sel"));
+  document.getElementById("whatNext").disabled = true;
+  document.getElementById("howNext").disabled = true;
+  go("s-photo");
+}
+
+// ---- photos (縮小してbase64) ----
+function gotPhoto(input, n){
+  const f = input.files && input.files[0]; if(!f) return;
+  const img = new Image();
+  img.onload = ()=>{
+    const MAX=1280, sc=Math.min(1, MAX/Math.max(img.width,img.height));
+    const c=document.createElement("canvas"); c.width=img.width*sc; c.height=img.height*sc;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+    const data = c.toDataURL("image/jpeg",.78);
+    rec["p"+n]=data;
+    const slot=document.getElementById("slot"+n);
+    slot.classList.add("done");
+    const im=document.createElement("img"); im.src=data; slot.appendChild(im);
+    const bd=document.createElement("span"); bd.className="badge"; bd.textContent="とれました ✓"; slot.appendChild(bd);
+    if(rec.p1) document.getElementById("photoNext").disabled=false; // 近景1枚で先へ進める
+    URL.revokeObjectURL(img.src);
+  };
+  img.src = URL.createObjectURL(f);
+}
+
+// ---- choice buttons ----
+function buildBtns(id, list, key, nextId){
+  const box=document.getElementById(id);
+  list.forEach(([em,label,val])=>{
+    const b=document.createElement("div"); b.className="bb";
+    b.innerHTML=`<span class="em">${em}</span><span>${label}</span>`;
+    b.onclick=()=>{ box.querySelectorAll(".bb").forEach(x=>x.classList.remove("sel")); b.classList.add("sel");
+      rec[key]=val; document.getElementById(nextId).disabled=false; };
+    box.appendChild(b);
+  });
+}
+buildBtns("whatBtns", WHAT, "what", "whatNext");
+buildBtns("howBtns", HOW, "how", "howNext");
+
+// ---- GPS ----
+function getGPS(){
+  const st=document.getElementById("gpsSt"), co=document.getElementById("gpsCo"), btn=document.getElementById("sendBtn");
+  st.textContent="📍 さがしています…"; co.textContent=""; btn.disabled=true;
+  if(!navigator.geolocation){ st.textContent="📍 この端末では場所がとれません"; btn.disabled=false; return; }
+  navigator.geolocation.getCurrentPosition(p=>{
+    rec.lat=+p.coords.latitude.toFixed(6); rec.lng=+p.coords.longitude.toFixed(6); rec.acc=Math.round(p.coords.accuracy);
+    st.textContent="📍 ばしょが わかりました"; co.textContent=`${rec.lat}, ${rec.lng}(±${rec.acc}m)`;
+    btn.disabled=false;
+  }, e=>{
+    st.textContent="📍 場所がとれませんでした(そのまま送れます)"; btn.disabled=false;
+  }, {enableHighAccuracy:true, timeout:10000});
+}
+
+// ---- send / queue ----
+function toast(t){ const el=document.getElementById("toast"); el.textContent=t; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
+function queue(){ const q=G("queue",[]); q.push(rec); S("queue",q); updateCount(); }
+function updateCount(){
+  const today=new Date().toISOString().slice(0,10);
+  const n=G("sentToday",{}); const c=(n.d===today)?n.c:0;
+  document.getElementById("count").textContent = c? `きょう ${c}けん` : "";
+  document.getElementById("pendCount").textContent = G("queue",[]).length;
+  return c;
+}
+function bumpToday(){
+  const today=new Date().toISOString().slice(0,10);
+  const n=G("sentToday",{}); const c=((n.d===today)?n.c:0)+1; S("sentToday",{d:today,c}); return c;
+}
+async function send(){
+  const btn=document.getElementById("sendBtn"); btn.disabled=true; btn.textContent="おくっています…";
+  const url=G("cfg",{}).url;
+  let ok=false;
+  if(url){
+    try{
+      await fetch(url,{method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"}, body:JSON.stringify(rec)});
+      ok=true;
+    }catch(e){ ok=false; }
+  }
+  if(!ok) queue();          // 送信先未設定 or 失敗 → 端末に保存(スタッフが後で送る)
+  const c=bumpToday(); updateCount();
+  const earned = recordStats(rec); renderProgress();
+  document.getElementById("doneSub").textContent =
+    (ok? "きろくが とどきました。" : "きろくを ほぞんしました。") + ` きょう ${c}けんめ です`;
+  document.getElementById("earnBox").innerHTML = earned.length
+    ? earned.map(x=>`<div class="earn">${x.em} 「${x.name}」を かくとく!</div>`).join("")
+      + `<button class="ghost" onclick="openStamps()">🎖️ スタンプちょうで みる</button>`
+    : "";
+  btn.disabled=false; btn.textContent="おくる";
+  go("s-done");
+}
+async function flush(){
+  const url=G("cfg",{}).url; if(!url){ toast("送信先URLが未設定です"); return; }
+  const q=G("queue",[]); let sent=0;
+  for(const r of q){ try{ await fetch(url,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(r)}); sent++; }catch(e){ break; } }
+  S("queue", q.slice(sent)); updateCount(); toast(`${sent}件送りました`);
+}
+
+// ---- スタンプ・バッジ(端末内のみ。登録不要・サーバーに送らない) ----
+const LANDMARKS = [
+  [10,"養浩館庭園","🏞️"],[20,"福井城址","🏯"],[30,"足羽山","⛰️"],[40,"一乗谷","🏮"],[50,"丸岡城","🏯"],
+  [60,"東尋坊","🌊"],[70,"永平寺","🛕"],[80,"恐竜博物館","🦖"],[90,"三方五湖","💧"],[100,"気比神宮","⛩️"]
+];
+const WALKDAYS = [3,7,15,30];
+function getStats(){ return G("stats",{total:0, days:[], cats:[]}); }
+function badgeList(st){
+  const b = [];
+  b.push({id:"first", em:"🌱", name:"はじめての きろく", cond:"さいしょの 1けん", got: st.total>=1});
+  LANDMARKS.forEach(([n,name,em])=> b.push({id:"lm"+n, em, name:`${name} とうちゃく`, cond:`きろく ${n}けん`, got: st.total>=n}));
+  WALKDAYS.forEach(d=> b.push({id:"wd"+d, em:"👟", name:`あるいた日 ${d}日`, cond:`きろくした日が ${d}日(れんぞくで なくて OK)`, got: st.days.length>=d}));
+  b.push({id:"comp6", em:"🌈", name:"ぜんぶの しゅるいを はっけん", cond:"6しゅるい すべてを きろく", got: st.cats.length>=6});
+  return b;
+}
+function recordStats(r){
+  const st = getStats();
+  const before = badgeList(st).filter(x=>x.got).map(x=>x.id);
+  st.total += 1;
+  const day = (r.ts||new Date().toISOString()).slice(0,10);
+  if(!st.days.includes(day)) st.days.push(day);
+  if(r.what && !st.cats.includes(r.what)) st.cats.push(r.what);
+  S("stats", st);
+  const earned = badgeList(st).filter(x=>x.got && !before.includes(x.id));
+  S("newBadges", earned.map(x=>x.id));
+  return earned;
+}
+function renderProgress(){
+  const st = getStats();
+  const next = LANDMARKS.find(([n])=> st.total < n);
+  const el = document.getElementById("progressCard");
+  if(!next){
+    el.innerHTML = `<div class="pc-top"><span class="em">🎉</span>ふくい いっしゅう たっせい!</div>
+      <div class="pc-sub">きろく ${st.total}けん・あるいた日 ${st.days.length}日</div>`;
+    return;
+  }
+  const [n,name,em] = next;
+  const prev = LANDMARKS.filter(([m])=>m<n).map(([m])=>m).pop() || 0;
+  const pct = Math.round((st.total-prev)/(n-prev)*100);
+  el.innerHTML = `<div class="pc-top"><span class="em">${em}</span>つぎは ${name}<span style="margin-left:auto;font-size:14px;color:var(--ink2);">あと ${n-st.total}けん</span></div>
+    <div class="bar"><i style="width:${Math.max(4,pct)}%"></i></div>
+    <div class="pc-sub">きろく ${st.total}けん・あるいた日 ${st.days.length}日 — タップで スタンプちょう</div>`;
+}
+function openStamps(){
+  const st = getStats();
+  const news = G("newBadges",[]);
+  document.getElementById("stampSub").textContent = `きろく ${st.total}けん・あるいた日 ${st.days.length}日`;
+  document.getElementById("rallyBox").innerHTML = LANDMARKS.map(([n,name,em])=>
+    `<div class="stamp ${st.total>=n?"got":""}"><div class="cir">${em}</div><div class="nm">${name}<br>${n}けん</div></div>`).join("");
+  document.getElementById("badgeBox").innerHTML = badgeList(st).map(x=>
+    `<div class="badge-row ${x.got?"got":""}"><div class="cir">${x.em}</div>
+      <div><div class="bn">${x.name}</div><div class="bc">${x.cond}</div></div>
+      ${x.got && news.includes(x.id) ? '<span class="new">NEW</span>' : ''}</div>`).join("");
+  S("newBadges", []);
+  go("s-stamps");
+}
+
+// ---- settings ----
+function saveCfg(){
+  S("cfg",{url:document.getElementById("cfgUrl").value.trim(), name:document.getElementById("cfgName").value.trim()});
+  document.getElementById("dlg").close(); toast("保存しました");
+}
+(function init(){
+  const c=G("cfg",{}); document.getElementById("cfgUrl").value=c.url||""; document.getElementById("cfgName").value=c.name||"";
+  updateCount(); renderProgress();
+})();
+</script>
+</body>
+</html>
