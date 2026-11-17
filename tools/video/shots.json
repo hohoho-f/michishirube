@@ -1,0 +1,90 @@
+{
+  "base_url": "https://hohoho-f.github.io/michishirube",
+  "fps": 30,
+  "shots": [
+    {
+      "id": "S1_opening",
+      "dur": 15,
+      "nar": "2025年11月。福井市を、ひとりで26日間歩きました。道路の壊れている場所を、366件見つけました。これは、その記録から始まった話です。",
+      "steps": [
+        {"op": "goto", "path": "/"},
+        {"op": "wait", "s": 5},
+        {"op": "pause", "s": 10}
+      ]
+    },
+    {
+      "id": "S2_breakdown",
+      "dur": 25,
+      "nar": "記録を地図にすると、こうなります。6割以上が、早めの対応が要るレベルでした。そして意外だったのはここ。市に通報できるのは、56パーセントだけ。残りは警察、県、鉄道会社と、窓口が全部ちがいます。どこが壊れているかより、誰に言うかが、いちばん難しい。",
+      "steps": [
+        {"op": "goto", "path": "/"},
+        {"op": "wait", "s": 4},
+        {"op": "highlight", "sel": "#stats", "s": 3},
+        {"op": "clickText", "text": "警察 80", "s": 2},
+        {"op": "clickText", "text": "県道 18", "s": 2},
+        {"op": "clickText", "text": "鉄道 16", "s": 2},
+        {"op": "clickText", "text": "すべて", "s": 2},
+        {"op": "pause", "s": 6}
+      ]
+    },
+    {
+      "id": "S3_priority",
+      "dur": 18,
+      "nar": "損傷がいちばん重いものに絞って、優先度の高い順に見ます。1位は文京五丁目。防護柵の支柱が錆びて折れ、人通りの多い歩道にあります。",
+      "steps": [
+        {"op": "goto", "path": "/"},
+        {"op": "wait", "s": 4},
+        {"op": "clickText", "text": "5のみ", "s": 2},
+        {"op": "click", "sel": ".rank li", "s": 3},
+        {"op": "highlight", "sel": ".sitz", "s": 3},
+        {"op": "pause", "s": 5}
+      ]
+    },
+    {
+      "id": "S4_copy",
+      "dur": 20,
+      "nar": "このツールは、記録を福井市の公式フォームに貼れる形まで変換します。ボタンひとつ。市役所に新しいシステムは要りません。いつものフォームに、通報の量と質だけが上がって届きます。",
+      "steps": [
+        {"op": "goto", "path": "/"},
+        {"op": "wait", "s": 4},
+        {"op": "clickText", "text": "5のみ", "s": 1},
+        {"op": "click", "sel": ".rank li", "s": 2},
+        {"op": "click", "sel": "#copyBtn", "s": 2},
+        {"op": "highlight", "sel": "#copyBtn", "s": 3},
+        {"op": "pause", "s": 7}
+      ]
+    },
+    {
+      "id": "S5_app",
+      "dur": 35,
+      "nar": "歩いて記録するのは、就労支援に通う当事者たちです。だからアプリは文字入力ゼロ。写真を撮って、絵のボタンを選ぶだけ。場所は自動で取れます。文章への変換は、AIと幹事がやります。そして10件記録すると、福井の名所にスタンプが押されます。",
+      "steps": [
+        {"op": "goto", "path": "/report.html"},
+        {"op": "wait", "s": 2},
+        {"op": "clickText", "text": "きろくする", "s": 2},
+        {"op": "file", "sel": "#slot1 input", "path": "assets/sample_kinkei.jpg", "s": 2},
+        {"op": "file", "sel": "#slot2 input", "path": "assets/sample_enkei.jpg", "s": 2},
+        {"op": "clickText", "text": "つぎへ", "s": 1},
+        {"op": "click", "sel": "#whatBtns .bb", "s": 2},
+        {"op": "clickText", "text": "つぎへ", "s": 1},
+        {"op": "click", "sel": "#howBtns .bb", "s": 2},
+        {"op": "clickText", "text": "つぎへ", "s": 1},
+        {"op": "wait", "s": 3},
+        {"op": "click", "sel": "#sendBtn", "s": 2},
+        {"op": "pause", "s": 3},
+        {"op": "clickText", "text": "スタンプちょうで みる", "s": 2, "optional": true},
+        {"op": "pause", "s": 5}
+      ]
+    },
+    {
+      "id": "S6_ending",
+      "dur": 20,
+      "nar": "記録した箇所のいくつかは、翌年、実際に予算がついて補修されました。歩くことが、訓練になり、通報になり、工賃になる。仕組みは全部公開しています。合同会社HOHOHO。社名の由来は、歩くを3つ並べた、歩歩歩です。",
+      "steps": [
+        {"op": "goto", "path": "/"},
+        {"op": "wait", "s": 5},
+        {"op": "pause", "s": 15}
+      ]
+    }
+  ]
+}

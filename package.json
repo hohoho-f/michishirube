@@ -1,0 +1,27 @@
+{
+  "name": "michishirube",
+  "version": "1.0.0",
+  "description": "**歩いた記録を、管轄ごとの通報と、道路に出す調査報告に。**",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hohoho-f/michishirube.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hohoho-f/michishirube/issues"
+  },
+  "homepage": "https://github.com/hohoho-f/michishirube#readme",
+  "dependencies": {
+    "playwright": "^1.65.1"
+  }
+}
