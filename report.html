@@ -3,15 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Serif+JP:wght@600;700&display=swap" rel="stylesheet">
+
 <title>ほほほレポート — あるいて、みつけて、おしえる</title>
 <style>
 :root{
-  --bg:#fffdf6; --card:#ffffff; --line:#e8e2d0; --ink:#2b2a26; --ink2:#7a766a;
-  --accent:#f5b800; --accent-dk:#1a1405; --ok:#3a8f4f; --danger:#c94f3d;
+  --bg:#F7F3EA; --card:#FFFFFF; --line:#DFD4BF; --ink:#5A4634; --ink2:#8A7A66;
+  --accent:#E8A04B; --accent-dk:#463D2F; --ok:#6E9E64; --danger:#D64540;
 }
 *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
-body{background:var(--bg); color:var(--ink); font-family:"Hiragino Maru Gothic ProN","BIZ UDGothic","Yu Gothic",system-ui,sans-serif; font-size:18px; line-height:1.6;}
+body{background:var(--bg); color:var(--ink); font-family:'Zen Maru Gothic','Hiragino Maru Gothic ProN','BIZ UDGothic',system-ui,sans-serif; font-size:18px; line-height:1.6;}
 .wrap{max-width:480px; margin:0 auto; min-height:100%; display:flex; flex-direction:column; padding:14px 14px 24px;}
 header{display:flex; align-items:center; gap:8px; padding:4px 2px 12px;}
 header .logo{font-size:22px; font-weight:800; letter-spacing:.04em;}
@@ -28,7 +32,7 @@ header .count{margin-left:auto; font-size:14px; color:var(--ink2);}
 .bigbtns.one{grid-template-columns:1fr;}
 .bb{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:18px 10px; text-align:center; font-size:17px; font-weight:700; cursor:pointer; min-height:96px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--ink);}
 .bb .em{font-size:34px; line-height:1;}
-.bb.sel{border-color:var(--accent); background:#fff7dc;}
+.bb.sel{border-color:var(--accent); background:#FDF3E3;}
 .bb:active{transform:scale(.97);}
 .primary{display:block; width:100%; background:var(--accent); color:var(--accent-dk); border:none; border-radius:16px; padding:18px; font-size:20px; font-weight:800; cursor:pointer; margin-top:16px; font-family:inherit;}
 .primary:disabled{opacity:.35;}
@@ -66,17 +70,17 @@ dialog .primary{margin-top:14px; padding:12px;}
 .rally{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:18px;}
 .stamp{text-align:center;}
 .stamp .cir{width:56px; height:56px; margin:0 auto; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; background:var(--line); filter:grayscale(1); opacity:.55; border:2px solid var(--line);}
-.stamp.got .cir{background:#fff3c9; filter:none; opacity:1; border-color:var(--accent);}
+.stamp.got .cir{background:#FDEFC4; filter:none; opacity:1; border-color:var(--accent);}
 .stamp .nm{font-size:10.5px; color:var(--ink2); margin-top:4px; line-height:1.3;}
 .stamp.got .nm{color:var(--ink); font-weight:700;}
 .badges{display:flex; flex-direction:column; gap:10px;}
 .badge-row{display:flex; gap:12px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
 .badge-row .cir{width:44px; height:44px; flex:none; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:22px; background:var(--line); filter:grayscale(1); opacity:.5;}
-.badge-row.got .cir{background:#fff3c9; filter:none; opacity:1; border:2px solid var(--accent);}
+.badge-row.got .cir{background:#FDEFC4; filter:none; opacity:1; border:2px solid var(--accent);}
 .badge-row .bn{font-size:15px; font-weight:800;}
 .badge-row .bc{font-size:12px; color:var(--ink2);}
 .badge-row.got .new{margin-left:auto; background:var(--danger); color:#fff; font-size:11px; border-radius:999px; padding:2px 8px; font-weight:800;}
-.earn{background:#fff7dc; border:2px solid var(--accent); border-radius:16px; padding:12px 14px; margin-top:14px; text-align:center; font-weight:800; font-size:17px;}
+.earn{background:#FDF3E3; border:2px solid var(--accent); border-radius:16px; padding:12px 14px; margin-top:14px; text-align:center; font-weight:800; font-size:17px;}
 .h2{font-size:16px; font-weight:800; margin:6px 0 10px; color:var(--ink);}
 </style>
 </head>
