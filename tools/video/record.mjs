@@ -49,8 +49,13 @@ const OVERLAY = `
 `;
 
 async function locate(page, step) {
-  if (step.sel) return page.locator(step.sel).first();
-  return page.getByText(step.text, { exact: false }).first();
+  const locs = step.sel ? page.locator(step.sel) : page.getByText(step.text, { exact: false });
+  const n = await locs.count();
+  for (let i = 0; i < n; i++) {           // 同名ボタンが複数ある場合、見えているものを選ぶ
+    const l = locs.nth(i);
+    if (await l.boundingBox()) return l;
+  }
+  return locs.first();
 }
 
 async function moveAndClick(page, loc) {
