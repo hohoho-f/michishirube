@@ -69,6 +69,8 @@
         {"op": "clickText", "text": "つぎへ", "s": 1},
         {"op": "click", "sel": "#howBtns .bb", "s": 2},
         {"op": "clickText", "text": "つぎへ", "s": 1},
+        {"op": "click", "sel": "#envBtns .bb", "s": 2},
+        {"op": "clickText", "text": "つぎへ", "s": 1},
         {"op": "wait", "s": 3},
         {"op": "click", "sel": "#sendBtn", "s": 2},
         {"op": "pause", "s": 3},

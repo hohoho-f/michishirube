@@ -105,7 +105,7 @@ dialog .primary{margin-top:14px; padding:12px;}
 
 <!-- STEP1 PHOTO -->
 <div class="screen" id="s-photo">
-  <div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+  <div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
   <div class="q">しゃしんを とる</div>
   <div class="sub">まず ちかくで 1まい。つぎに すこし はなれて 1まい</div>
   <label class="photo-slot" id="slot1">
@@ -122,7 +122,7 @@ dialog .primary{margin-top:14px; padding:12px;}
 
 <!-- STEP2 WHAT -->
 <div class="screen" id="s-what">
-  <div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+  <div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
   <div class="q">なにが こわれていますか?</div>
   <div class="sub">ちかいものを 1つ えらんでください</div>
   <div class="bigbtns" id="whatBtns"></div>
@@ -132,17 +132,27 @@ dialog .primary{margin-top:14px; padding:12px;}
 
 <!-- STEP3 HOW -->
 <div class="screen" id="s-how">
-  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
   <div class="q">どれくらい あぶないと<br>おもいますか?</div>
   <div class="sub">あなたの かんじたままで だいじょうぶです</div>
   <div class="bigbtns one" id="howBtns"></div>
-  <button class="primary" id="howNext" disabled onclick="go('s-send')">つぎへ</button>
+  <button class="primary" id="howNext" disabled onclick="go('s-env')">つぎへ</button>
   <button class="ghost" onclick="go('s-what')">もどる</button>
+</div>
+
+<!-- STEP4 ENV (まわりは?) -->
+<div class="screen" id="s-env">
+  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+  <div class="q">まわりは どんな ばしょですか?</div>
+  <div class="sub">ちかいものを 1つ えらんでください</div>
+  <div class="bigbtns" id="envBtns"></div>
+  <button class="primary" id="envNext" disabled onclick="go('s-send')">つぎへ</button>
+  <button class="ghost" onclick="go('s-how')">もどる</button>
 </div>
 
 <!-- STEP4 SEND -->
 <div class="screen" id="s-send">
-  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+  <div class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
   <div class="q">ばしょを しらべています</div>
   <div class="gps" id="gpsBox">
     <div class="st" id="gpsSt">📍 さがしています…</div>
@@ -150,7 +160,7 @@ dialog .primary{margin-top:14px; padding:12px;}
   </div>
   <div class="sub" id="sendSub">ばしょが わかったら「おくる」を おしてください</div>
   <button class="primary" id="sendBtn" disabled onclick="send()">おくる</button>
-  <button class="ghost" onclick="go('s-how')">もどる</button>
+  <button class="ghost" onclick="go('s-env')">もどる</button>
 </div>
 
 <!-- DONE -->
@@ -204,6 +214,12 @@ const HOW = [
   ["🟡","そのうち あぶない",3],
   ["⚪","よく わからない",2],
 ];
+const ENV = [
+  ["🏠","いえや おみせの ちかく","住宅・店舗"],
+  ["🏫","がっこうの ちかく","学校"],
+  ["🌊","かわ・みぞ・がけの そば","水路・崖"],
+  ["🌾","はたけ・あきちの そば","田畑・空地"],
+];
 
 let rec = null;
 const S = (k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
@@ -216,13 +232,14 @@ function go(id){
   if(id==="s-send") getGPS();
 }
 function start(){
-  rec = {ts:new Date().toISOString(), p1:null, p2:null, what:null, how:null, lat:null, lng:null, acc:null,
+  rec = {ts:new Date().toISOString(), p1:null, p2:null, what:null, how:null, env:null, lat:null, lng:null, acc:null,
          name: G("cfg",{}).name||""};
   ["slot1","slot2"].forEach(i=>{const s=document.getElementById(i); s.classList.remove("done"); s.querySelectorAll("img,.badge").forEach(x=>x.remove());});
   document.getElementById("photoNext").disabled = true;
-  document.querySelectorAll("#whatBtns .bb, #howBtns .bb").forEach(b=>b.classList.remove("sel"));
+  document.querySelectorAll("#whatBtns .bb, #howBtns .bb, #envBtns .bb").forEach(b=>b.classList.remove("sel"));
   document.getElementById("whatNext").disabled = true;
   document.getElementById("howNext").disabled = true;
+  document.getElementById("envNext").disabled = true;
   go("s-photo");
 }
 
@@ -259,6 +276,7 @@ function buildBtns(id, list, key, nextId){
 }
 buildBtns("whatBtns", WHAT, "what", "whatNext");
 buildBtns("howBtns", HOW, "how", "howNext");
+buildBtns("envBtns", ENV, "env", "envNext");
 
 // ---- GPS ----
 function getGPS(){
